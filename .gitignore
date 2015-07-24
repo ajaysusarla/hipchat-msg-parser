@@ -1,0 +1,9 @@
+.tox/
+*.pyc
+*.egg-info/
+.coverage
+junit-py27.xml
+__pycache__/
+coverage.xml
+dist/
+build/
