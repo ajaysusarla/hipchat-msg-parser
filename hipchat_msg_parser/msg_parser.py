@@ -1,8 +1,6 @@
-import fileinput
 import re
 import json
 from .utils import is_url, get_title
-from bs4 import BeautifulSoup
 
 class MsgParser(object):
     def __init__(self):
