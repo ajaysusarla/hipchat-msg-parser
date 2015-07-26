@@ -16,7 +16,7 @@ def is_url(url):
         return False
 
 
-def get_title(url):
+def get_title(url, timeout=60):
     """
     Returns the title of the HTML page pointed to by `url`.
     """
@@ -25,7 +25,7 @@ def get_title(url):
         if parsed_url.scheme not in ['http', 'https']:
             return ""
 
-        soup = BeautifulSoup(urllib2.urlopen(url), "html.parser")
+        soup = BeautifulSoup(urllib2.urlopen(url, timeout=timeout), "html.parser")
 
         return soup.title.string if soup.title.string else ""
     except:

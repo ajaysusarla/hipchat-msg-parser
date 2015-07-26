@@ -20,7 +20,6 @@ def process_args():
 def main():
     parser = process_args()
     args = parser.parse_args()
-    count = 0
 
     if args.retain is True:
         pass
@@ -33,8 +32,8 @@ def main():
             mp = MsgParser()
             print "Input: ", msg
             print "Ouput:"
-            mp.parse(msg)
-            ret = mp.report()
+            mp.tokenize(msg)
+            ret = mp.genparse()
             print ret
             print
 

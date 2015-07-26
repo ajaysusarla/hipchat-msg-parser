@@ -16,7 +16,7 @@ def test_get_title_bs4_raises_exception(monkeypatch):
         def __init__(self, url, mode):
             raise Exception
 
-    def mock_urlopen(url):
+    def mock_urlopen(url, timeout):
         assert url == "http://foo.com"
 
     monkeypatch.setattr("hipchat_msg_parser.utils.urllib2.urlopen", mock_urlopen)
@@ -27,7 +27,7 @@ def test_get_title_bs4_raises_exception(monkeypatch):
 
 def test_get_title_bs4_valid_title(monkeypatch):
 
-    def mock_urlopen(url):
+    def mock_urlopen(url, timeout):
         assert url == "http://foo.com"
         return "<html><title>FooBar</title></html>"
 
