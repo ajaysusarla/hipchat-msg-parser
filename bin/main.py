@@ -2,38 +2,59 @@
 
 import fileinput
 import sys
+import logging
 from argparse import ArgumentParser
 from hipchat_msg_parser import MsgParser
 
 def process_args():
-    parser = ArgumentParser(description='Parse HipChat messages.')
+    USAGE_STR="""
+    %(prog)s [options] < [FILE-NAME]
+    - or -
+    echo [MESSAGE] | %(prog)s [options]"""
+    parser = ArgumentParser(description='Parse HipChat messages.', usage=USAGE_STR)
 
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--retain", dest="retain", action="store_true",
-                       help="Retains the structure of the message in the output.")
+    parser.add_argument("--verbose", dest="verbose", action="store_true",
+                        help="Enable verbosity when errors/warnings are written to stderr.")
+    parser.add_argument("--all", dest="all", action="store_true",
+                        help="List all tokens of the parsed message, not just the special content.")
 
-    parser.set_defaults(retain=False)
+    parser.set_defaults(all=False)
+    parser.set_defaults(verbose=False)
 
     return parser
+
+def setup_logger(verbose=False):
+    log_level = logging.INFO if verbose else logging.WARNING
+    logger = logging.getLogger("hipchat_msg_parser")
+    ch = logging.StreamHandler()
+    ch.setLevel(log_level)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
 
 
 def main():
     parser = process_args()
     args = parser.parse_args()
 
-    if args.retain is True:
-        pass
-    else:
-        pass
+    f_input = 1
 
-    for line in fileinput.input():
+    if args.all:
+        f_input += 1
+
+    if args.verbose:
+        f_input += 1
+
+    setup_logger(args.verbose)
+
+    mp = MsgParser()
+
+    for line in fileinput.input(sys.argv[f_input:]):
         msg = line.rstrip()
         if len(msg):
-            mp = MsgParser()
             print "Input: ", msg
             print "Ouput:"
-            mp.tokenize(msg)
-            ret = mp.genparse()
+            ret = mp.parse(msg, args.all)
             print ret
             print
 

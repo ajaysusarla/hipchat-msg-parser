@@ -34,7 +34,6 @@ Ouput:
     }
   ]
 }
-
 ```
 The `tests/example-data.txt` file has several examples, that can be used to test `parse-msg`. One can edit the file and add test data to it. Example usage:
 ```bash
@@ -76,7 +75,6 @@ Ouput:
   ]
 }
 ```
-
 
 ## Installing ##
 A gzipped tarball of this project can be build by running:

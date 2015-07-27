@@ -1,8 +1,14 @@
+#-------------------------------------
+# hipchat_msg_parser: utils.py
+#-------------------------------------
+
+import logging
 import rfc3987
 from bs4 import BeautifulSoup
 import urllib2
 from urlparse import urlparse
 
+logger = logging.getLogger("hipchat_msg_parser.utils")
 
 def is_url(url):
     """
@@ -13,6 +19,7 @@ def is_url(url):
         rfc3987.parse(url, rule='IRI')
         return True
     except ValueError:
+        logger.warning("%s is not a valid url.", url)
         return False
 
 
@@ -29,4 +36,5 @@ def get_title(url, timeout=60):
 
         return soup.title.string if soup.title.string else ""
     except:
+        logger.warning("Could not get title of %s.", url)
         return ""
