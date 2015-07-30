@@ -18,10 +18,6 @@ class Tox(TestCommand):
         errno = tox.cmdline(self.test_args)
         sys.exit(errno)
 
-with open('requirements.txt') as reqs:
-    install_requires = [
-        line for line in reqs.read().split('\n') if (line and not line.startswith('--'))
-        ]
 setup(
     name = "hipchat-msg-parser",
     version = "0.1.0",
@@ -34,7 +30,6 @@ setup(
             'hipchat-msg-parse = bin.main:main'
         ],
     },
-    install_requires = install_requires,
     tests_require = ['tox'],
     cmdclass = {
         'test' : Tox,

@@ -5,6 +5,7 @@
 import logging
 import re
 import json
+import string
 from .utils import is_url, get_title
 import concurrent.futures
 
@@ -26,7 +27,7 @@ class Token(object):
 
 class MsgParser(object):
     """
-    The MsgParser classes, parses a HipChat message into tokens
+    The MsgParser class, parses a HipChat message into tokens
     which are then processed to generate a dict of all tokens or
     just tokens with special content(mentions, emoticons, links).
     """
@@ -35,8 +36,13 @@ class MsgParser(object):
         self.logger = logging.getLogger("hipchat_msg_parser.msg_parser")
 
         # regex for emoticons:
-        self._is_emoticon = re.compile('\(([a-zA-Z0-9]{1,15})\)',
+        self._is_emoticon = re.compile('\(([a-zA-Z0-9()]{1,15})\)',
                                        re.IGNORECASE)
+
+        # Stripping mentions of special characters in the begining and end
+        tab = string.maketrans('','')
+        self.trans_tab = tab.translate(tab,\
+            '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 
     def _add_token(self, t_type, t_value):
@@ -56,7 +62,7 @@ class MsgParser(object):
 
 
     def _mention(self, token):
-        self._add_token(TokenType.MENTION, token.strip('@'))
+        self._add_token(TokenType.MENTION, token.strip(self.trans_tab))
 
 
     def _emoticon(self, token):
